@@ -1,24 +1,22 @@
 import React, { Component } from 'react';
+import {MediaPlayer} from 'dashjs';
 
 class Video extends Component {
   constructor(props) {
    super(props)
-   this.state = {url: './mr2v2mobile.mp4'}
+   this.state = {url: 'http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd'}
  }
 
- componentWillMount() {
-        const script = document.createElement("script");
-
-        script.src = "http://cdn.dashjs.org/latest/dash.all.min.js";
-        //script.async = true;
-
-        document.body.appendChild(script);
+ componentDidMount() {
+        this.video = this.refs['video'];
+        this.player = MediaPlayer().create();
+        this.player.initialize(this.video, this.state.url, true);
 }
 
  render() {
     return (
       <div>
-        <video data-dashjs-player autoplay src={this.state.url} controls></video>
+        <video ref="video" controls></video>
       </div>
     );
   }
