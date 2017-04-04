@@ -8,7 +8,7 @@ export const receiveVideos = json => ({
 
 export function fetchVideos() {
   return function(dispatch) {
-    axios.get('http://private-fb2453-test12911.apiary-mock.com/front')
+    axios.get('https://private-fb2453-test12911.apiary-mock.com/front')
     .then(function(response) {
       dispatch(receiveVideos(response))
     })
