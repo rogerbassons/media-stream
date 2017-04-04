@@ -3,13 +3,14 @@ export const RECEIVE_VIDEOS = 'RECEIVE_VIDEOS'
 
 export const receiveVideos = json => ({
   type: RECEIVE_VIDEOS,
-  videos: json.data[0].videos
+  videos: json.data.results
 })
 
 export function fetchVideos() {
   return function(dispatch) {
-    axios.get('https://private-fb2453-test12911.apiary-mock.com/front')
+    axios.get('http://localhost:8000/videos/')
     .then(function(response) {
+      console.log(response.data.results)
       dispatch(receiveVideos(response))
     })
   }
