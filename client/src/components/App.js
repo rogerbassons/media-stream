@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import {
+  BrowserRouter as Router,
+  Route
+} from 'react-router-dom'
 import logo from '../logo.svg'
 import './App.css'
 import Videos from '../components/Videos'
+import Video from '../components/Video'
 import {fetchVideos} from '../actions'
 
 class App extends Component {
@@ -15,6 +20,14 @@ class App extends Component {
   render() {
       const videos = this.props.videos
       const isEmpty = videos.length === 0
+      const Home = () => (
+        !isEmpty &&
+        <Videos videos={videos} />
+
+      )
+      const Watch = ({match}) => (
+        <Video id={match.params.id} />
+      )
 
     return (
       <div className="App">
@@ -22,9 +35,12 @@ class App extends Component {
       <img src={logo} className="App-logo" alt="logo" />
       <h1>MediaStream</h1>
       </div>
-      {!isEmpty &&
-        <Videos videos={videos} />
-      }
+      <Router>
+        <div>
+          <Route exact path="/" component={Home}/>
+          <Route path="/watch/:id" component={Watch}/>
+        </div>
+      </Router>
       </div>
     );
   }

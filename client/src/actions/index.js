@@ -10,7 +10,6 @@ export function fetchVideos() {
   return function(dispatch) {
     axios.get('http://localhost:8000/videos/')
     .then(function(response) {
-      console.log(response.data.results)
       dispatch(receiveVideos(response))
     })
   }

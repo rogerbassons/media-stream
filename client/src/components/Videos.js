@@ -1,19 +1,31 @@
 import React, { Component } from 'react'
-import Video from './Video'
-
+import { Link } from 'react-router-dom'
+import 'bootstrap/dist/css/bootstrap.css'
 
 class Videos extends Component {
 
  render() {
    const {videos} = this.props
-   console.log(videos.videos)
-   const listVideos = videos.videos.map((video,i) =>  <li> <Video video={video} /></li>)
+   const listVideos = videos.videos.map((video,i) =>
+   <div className="col-md-4">
+    <div className="thumbnail">
+      <Link to={"/watch/" + video.videoId}>
+        <img src={"http://localhost/thumbs/" + video.videoId + ".png"} alt={video.title} style={{"width" : "100%"}} />
+        <div className="caption">
+          <p>{video.title}</p>
+        </div>
+      </Link>
+    </div>
+   </div>)
+
    return (
-     <div>
-     <ul>
-     {listVideos}
-      </ul>
-      </div>
+  <div>
+   <div className="container">
+     <div className="row">
+       {listVideos}
+     </div>
+   </div>
+   </div>
     )
   }
 }

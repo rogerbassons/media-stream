@@ -4,17 +4,16 @@ import {MediaPlayer} from 'dashjs';
 class Video extends Component {
 
   componentDidMount() {
-    const {title, url} = this.props.video
-    this.video = this.refs[title]
+    var url = "http://localhost/videos/" + this.props.id + "/" + this.props.id + ".mpd"
+    this.video = this.refs["dashplayer"]
     this.player = MediaPlayer().create()
     this.player.initialize(this.video, url, true)
   }
 
   render() {
-    const {title, url} = this.props.video
     return (
       <div>
-      <video ref={title} controls></video>
+          <video ref="dashplayer" controls></video>
       </div>
     )
   }
