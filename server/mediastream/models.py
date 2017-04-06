@@ -5,3 +5,6 @@ from django.db import models
 class Video(models.Model):
     title = models.CharField(max_length=200)
     videoId = models.CharField(max_length=200)
+    likes = models.BigIntegerField()
+    unlikes = models.BigIntegerField()
+    date = models.DateField(auto_now=False, auto_now_add=True)

@@ -8,7 +8,7 @@ export const receiveVideos = json => ({
 
 export function fetchVideos() {
   return function(dispatch) {
-    axios.get('http://localhost:8000/videos/')
+    axios.get('http://localhost:8000/videos/last')
     .then(function(response) {
       dispatch(receiveVideos(response))
     })
