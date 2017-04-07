@@ -15,6 +15,13 @@ class VideoViewSet(viewsets.ModelViewSet):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
 
+    def get_queryset(self):
+        queryset = Video.objects.all()
+        searchtext = self.request.query_params.get('search', None)
+        if searchtext is not None:
+            queryset = queryset.filter(title__icontains=searchtext)
+        return queryset
+
     @list_route()
     def last(self, request):
         last_videos = Video.objects.all().order_by('-date')[:20]
