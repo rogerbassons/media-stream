@@ -12,9 +12,13 @@ class Video extends Component {
 
   render() {
     return (
-      <div>
-          <video ref="dashplayer" controls></video>
+    <div className="col-md-12 movieblack">
+      <div className="col-md-2"></div>
+      <div className="col-md-8 text-center">
+        <video ref="dashplayer" controls></video>
       </div>
+      <div className="col-md-2"></div>
+    </div>
     )
   }
 }

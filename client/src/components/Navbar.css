@@ -1,0 +1,11 @@
+.navbar {
+  background-color: #08546D;
+}
+
+.nav.navbar-nav.navbar-right li a {
+    color: white;
+}
+
+.navtext {
+  color: white
+}

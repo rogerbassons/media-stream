@@ -4,11 +4,13 @@ import {
   BrowserRouter as Router,
   Route
 } from 'react-router-dom'
-import logo from '../logo.svg'
 import './App.css'
 import Videos from '../components/Videos'
 import Video from '../components/Video'
+import Navbar from '../components/Navbar'
 import {fetchVideos} from '../actions'
+import 'bootstrap/dist/css/bootstrap.css'
+
 
 class App extends Component {
 
@@ -21,27 +23,27 @@ class App extends Component {
       const videos = this.props.videos
       const isEmpty = videos.length === 0
       const Home = () => (
-        !isEmpty &&
-        <Videos videos={videos} />
-
+        <div>
+          <Navbar />
+          {!isEmpty && <Videos videos={videos} />}
+        </div>
       )
       const Watch = ({match}) => (
-        <Video id={match.params.id} />
+        <div>
+          <Navbar />
+          <Video id={match.params.id} />
+        </div>
       )
 
     return (
-      <div className="App">
-      <div className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
-      <h1>MediaStream</h1>
-      </div>
+    <div className="App">
       <Router>
         <div>
           <Route exact path="/" component={Home}/>
           <Route path="/watch/:id" component={Watch}/>
         </div>
       </Router>
-      </div>
+    </div>
     );
   }
 }
