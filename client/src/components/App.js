@@ -16,15 +16,15 @@ class App extends Component {
   render() {
       const Watch = ({match, history}) => (
         <div>
-          <Bar />
           <Video id={match.params.id} />
         </div>
       )
 
     return (
-    <div className="App">
+    <div className="App container-fluid">
       <Router>
         <div>
+          <Bar />
           <Route exact path="/" component={Front}/>
           <Route path="/videos" component={Search}/>
           <Route path="/watch/:id" component={Watch}/>

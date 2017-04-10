@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
-import Bar from '../components/Bar'
 import Videos from '../components/Videos'
 import {searchVideos} from '../actions'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -26,12 +25,13 @@ class Search extends Component {
   }
 
   render() {
-   const { videos } = this.props
+   const {videos} = this.props
    const isEmpty = videos.length === 0
+   const search = this.props.location.search.split('=')[1].replace('+', ' ')
    return (
      <div>
-       <Bar />
-       {!isEmpty && <Videos videos={videos} />}
+       <p> Results for <i>{search}</i>:</p>
+       {!isEmpty && <Videos videos={videos.videos} />}
     </div>
     )
   }

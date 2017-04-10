@@ -6,8 +6,8 @@ class Videos extends Component {
 
  render() {
    const {videos} = this.props
-   const listVideos = videos.videos.map((video,i) =>
-   <div className="col-md-4">
+   const listVideos = videos.map((video,i) =>
+   <div key={video.videoId} className="col-md-4">
     <div className="thumbnail">
       <Link to={"/watch/" + video.videoId}>
         <img src={"http://localhost/thumbs/" + video.videoId + ".png"} alt={video.title} style={{"width" : "100%"}} />

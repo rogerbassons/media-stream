@@ -9,7 +9,7 @@ class Bar extends Component {
   render() {
     let input
     return (
-           <Navbar className="navbar-light teal lighten-4">
+           <Navbar className="row navbar fixed-top navbar-inverse bg-primary  bg-faded navbar-toggleable-md navbar-toggleable-* ">
              <Navbar.Header>
                <Navbar.Brand>
                  <Link to="/">Home</Link>
@@ -30,7 +30,9 @@ class Bar extends Component {
                    <FormControl type="text" placeholder="Search" inputRef={ref => { input = ref }}/>
                    </FormGroup>
                    {' '}
-                   <Button type="submit">Submit</Button>
+                   <Button type="submit" className="btn btn-info">
+                     <span className="glyphicon glyphicon-search"></span>
+                  </Button>
                  </form>
                </Navbar.Form>
              </Navbar.Collapse>
