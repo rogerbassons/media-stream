@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 import {
   RECEIVE_VIDEOS,
-  RECEIVE_SEARCH
+  RECEIVE_VIDEO
 } from '../actions'
 
 function videos(state = [], action) {
@@ -10,9 +10,16 @@ function videos(state = [], action) {
       return {
         videos: action.videos,
       }
-    case RECEIVE_SEARCH:
+    default:
+      return state
+  }
+}
+
+function video(state = null, action) {
+  switch (action.type) {
+    case RECEIVE_VIDEO:
       return {
-        videos: action.videos,
+        video: action.video
       }
     default:
       return state
@@ -20,7 +27,8 @@ function videos(state = [], action) {
 }
 
 const rootReducer = combineReducers({
-  videos
+  videos,
+  video
 })
 
 export default rootReducer

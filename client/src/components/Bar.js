@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom'
 import { Button, Navbar, FormGroup, FormControl } from 'react-bootstrap'
 import { withRouter } from 'react-router'
 import 'bootstrap/dist/css/bootstrap.css'
+import './App.css'
 
 class Bar extends Component {
 
   render() {
     let input
     return (
-           <Navbar className="row navbar fixed-top navbar-inverse bg-primary  bg-faded navbar-toggleable-md navbar-toggleable-* ">
+           <Navbar className="row navbar navbar-default navbar-fixed-top navbar-inverse bg-primary bg-faded navbar-toggleable-md navbar-toggleable-*">
              <Navbar.Header>
                <Navbar.Brand>
                  <Link to="/">Home</Link>

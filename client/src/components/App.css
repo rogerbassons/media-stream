@@ -6,3 +6,7 @@ video {
 .movieblack {
   background-color: black;
 }
+
+.content {
+  padding-top: 50px;
+}

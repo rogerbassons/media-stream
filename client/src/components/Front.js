@@ -16,7 +16,7 @@ class Front extends Component {
    const { videos } = this.props
    const isEmpty = videos.length === 0
    return (
-     <div>
+     <div className="row">
        {!isEmpty && <Videos videos={videos} />}
     </div>
     )

@@ -4,7 +4,7 @@ import {
   Route
 } from 'react-router-dom'
 import './App.css'
-import Video from '../components/Video'
+import Watch from '../components/Watch'
 import Front from '../components/Front'
 import Search from '../components/Search'
 import Bar from '../components/Bar'
@@ -14,20 +14,17 @@ import 'bootstrap/dist/css/bootstrap.css'
 class App extends Component {
 
   render() {
-      const Watch = ({match, history}) => (
-        <div>
-          <Video id={match.params.id} />
-        </div>
-      )
 
     return (
-    <div className="App container-fluid">
+    <div className="App">
       <Router>
-        <div>
+        <div className="container-fluid">
           <Bar />
-          <Route exact path="/" component={Front}/>
-          <Route path="/videos" component={Search}/>
-          <Route path="/watch/:id" component={Watch}/>
+          <div className="content">
+            <Route exact path="/" component={Front}/>
+            <Route path="/videos" component={Search}/>
+            <Route path="/watch" component={Watch}/>
+          </div>
         </div>
       </Router>
     </div>
