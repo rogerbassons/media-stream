@@ -25,13 +25,13 @@ class Search extends Component {
   }
 
   render() {
-   const {videos} = this.props
+   const { videos } = this.props
    const isEmpty = videos.length === 0
    const search = this.props.location.search.split('=')[1].replace('+', ' ')
    return (
      <div>
        <p> Results for <i>{search}</i>:</p>
-       {!isEmpty && <Videos videos={videos.videos} />}
+       {!isEmpty && <Videos videos={videos} />}
     </div>
     )
   }
