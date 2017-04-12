@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Video
+from .models import Video, Comment
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -14,6 +14,13 @@ class VideoThumbSerializer(serializers.HyperlinkedModelSerializer):
 
 class VideoSerializer(serializers.HyperlinkedModelSerializer):
     user = UserSerializer(read_only=True)
+    comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     class Meta:
         model = Video
-        fields = ('title', 'videoId', 'numberviews', 'likes', 'unlikes', 'date', 'description', 'user')
+        fields = ('title', 'videoId', 'numberviews', 'likes', 'unlikes', 'date', 'description', 'user', 'comments')
+
+class CommentSerializer(serializers.HyperlinkedModelSerializer):
+    user = UserSerializer(read_only=True)
+    class Meta:
+        model = Comment
+        fields = ('text', 'user', 'date')
