@@ -20,9 +20,14 @@ class Bar extends Component {
 
   render() {
     const { token } = this.props
-    let navitem = (<NavItem eventKey={1} onClick={()=>this.handleLink("/login")}>Login</NavItem>)
+    let navi = (<Nav pullRight><NavItem eventKey={1} onClick={()=>this.handleLink("/login")}>Login</NavItem></Nav>)
     if (token !== null && token.token !== null) {
-      navitem = (<NavItem eventKey={1} onClick={()=>this.handleLink("logout")}>Logout</NavItem>)
+      navi = (
+        <Nav pullRight>
+          <NavItem eventKey={1} onClick={()=>this.handleLink("/upload")}><span className="glyphicon glyphicon-plus"></span></NavItem>
+          <NavItem eventKey={2} onClick={()=>this.handleLink("logout")}> Logout </NavItem>
+        </Nav>
+      )
     }
     let input
     return (
@@ -52,9 +57,7 @@ class Bar extends Component {
                   </Button>
                  </form>
                </Navbar.Form>
-               <Nav pullRight>
-                 {navitem}
-               </Nav>
+               {navi}
              </Navbar.Collapse>
            </Navbar>
          )
