@@ -1,13 +1,29 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Button, Navbar, FormGroup, FormControl } from 'react-bootstrap'
+import { Button, Navbar, Nav, NavItem, FormGroup, FormControl } from 'react-bootstrap'
 import { withRouter } from 'react-router'
+import {deleteToken} from '../actions'
 import 'bootstrap/dist/css/bootstrap.css'
 import './App.css'
 
 class Bar extends Component {
 
+  handleLink(path) {
+    const {dispatch} = this.props
+    if (path === "logout") {
+      path = "/"
+      dispatch(deleteToken())
+    }
+    this.props.history.push(path);
+  }
+
   render() {
+    const { token } = this.props
+    let navitem = (<NavItem eventKey={1} onClick={()=>this.handleLink("/login")}>Login</NavItem>)
+    if (token !== null && token.token !== null) {
+      navitem = (<NavItem eventKey={1} onClick={()=>this.handleLink("logout")}>Logout</NavItem>)
+    }
     let input
     return (
            <Navbar className="row navbar navbar-default navbar-fixed-top navbar-inverse bg-primary bg-faded navbar-toggleable-md navbar-toggleable-*">
@@ -36,10 +52,20 @@ class Bar extends Component {
                   </Button>
                  </form>
                </Navbar.Form>
+               <Nav pullRight>
+                 {navitem}
+               </Nav>
              </Navbar.Collapse>
            </Navbar>
          )
        }
 }
 
-export default withRouter(Bar)
+const mapStateToProps = state => {
+  const { token } = state
+  return {
+    token
+  }
+}
+
+export default connect(mapStateToProps)(withRouter(Bar))
