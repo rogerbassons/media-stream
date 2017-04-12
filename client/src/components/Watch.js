@@ -30,6 +30,7 @@ class Watch extends Component {
     }
     return (
     <div>
+
       <div className="row">
         {videoplayer}
       </div>
@@ -39,16 +40,30 @@ class Watch extends Component {
           <h1> {title} </h1>
         </div>
       </div>
+
+
       <div className="row">
         <div  className="col-md-2"></div>
         <div  className="col-md-6">
           {username}
         </div>
-        <div  className="col-md-2">
-          <p className="views"><i> {numberviews} </i> views</p>
+        <div  className="col-md-2 rightalign">
+          <i> {numberviews} </i> views
         </div>
         <div  className="col-md-2"></div>
       </div>
+
+      <div className="row">
+        <div  className="col-md-2"></div>
+        <div  className="col-md-6"></div>
+        <div  className="col-md-2 rightalign">
+          <span className="rightmargin glyphicon glyphicon-thumbs-up">{likes}</span>
+          <span className="glyphicon glyphicon-thumbs-down">{unlikes}</span>
+        </div>
+        <div  className="col-md-2"></div>
+      </div>
+
+
       <div className="row">
         <div  className="col-md-2"></div>
         <Panel className="col-md-8">
@@ -57,6 +72,7 @@ class Watch extends Component {
         </Panel>
         <div  className="col-md-2"></div>
       </div>
+
     </div>
     )
   }

@@ -11,6 +11,11 @@ video {
   padding-top: 50px;
 }
 
-.views {
+.rightalign {
   text-align: right;
+  float: right;
+}
+
+.rightmargin {
+  margin-right: 10px;
 }
