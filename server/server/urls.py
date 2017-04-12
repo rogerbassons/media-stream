@@ -26,6 +26,7 @@ router.register(r'videos', views.VideoViewSet)
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
+    url('^videos/(?P<videoId>\d+)', views.VideoById.as_view()),
     url(r'^', include(router.urls)),
     url(r'^login', authtokenviews.obtain_auth_token)
 ]

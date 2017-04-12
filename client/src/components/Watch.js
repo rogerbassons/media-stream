@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import Video from '../components/Video'
-import {getVideo} from '../actions'
+import {getVideo, likeVideo, unlikeVideo} from '../actions'
 import { Panel } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.css'
 
@@ -14,11 +14,20 @@ class Watch extends Component {
     dispatch(getVideo(props.history.location.search.split('=')[1]))
   }
 
+  handleReaction(reaction) {
+    const { dispatch } = this.props
+    if (reaction === 'like') {
+      dispatch(likeVideo(this.props.video.video[0].videoId))
+    } else if (reaction === 'unlike') {
+      dispatch(unlikeVideo(this.props.video.video[0].videoId))
+    }
+  }
+
   render() {
-    let video = this.props.video
-    let videoplayer, title, description, likes, unlikes, date, numberviews, username = null
+    const { video, token }= this.props
+    let videoplayer, title, description, likes, unlikes, date, numberviews, username
     if (video !== null) {
-      const v = video.video[0]
+      const v = video.video
       title = v.title
       description = v.description
       likes = v.likes
@@ -28,6 +37,23 @@ class Watch extends Component {
       username = v.user.username
       videoplayer = (<Video id={v.videoId} />)
     }
+
+    let reactions = (
+      <div>
+        <span className="rightmargin glyphicon glyphicon-thumbs-up">{likes}</span>
+        <span className="glyphicon glyphicon-thumbs-down">{unlikes}</span>
+      </div>
+    )
+
+    if (token !== null) {
+      reactions = (
+        <div>
+          <span className="rightmargin glyphicon glyphicon-thumbs-up" onClick={()=>this.handleReaction("like")}>{likes}</span>
+          <span className="glyphicon glyphicon-thumbs-down" onClick={()=>this.handleReaction("unlike")}>{unlikes}</span>
+        </div>
+      )
+    }
+
     return (
     <div>
 
@@ -57,8 +83,7 @@ class Watch extends Component {
         <div  className="col-md-2"></div>
         <div  className="col-md-6"></div>
         <div  className="col-md-2 rightalign">
-          <span className="rightmargin glyphicon glyphicon-thumbs-up">{likes}</span>
-          <span className="glyphicon glyphicon-thumbs-down">{unlikes}</span>
+          {reactions}
         </div>
         <div  className="col-md-2"></div>
       </div>
@@ -79,9 +104,9 @@ class Watch extends Component {
 }
 
 const mapStateToProps = state => {
-  const { video } = state
+  const { video, token } = state
   return {
-    video
+    video, token
   }
 }
 

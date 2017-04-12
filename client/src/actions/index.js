@@ -11,7 +11,7 @@ export const receiveVideos = json => ({
 
 export const receiveVideo = json => ({
   type: RECEIVE_VIDEO,
-  video: json.data.results
+  video: json.data
 })
 
 export const receiveToken = json => ({
@@ -43,9 +43,27 @@ export const searchVideos = (text) => {
 
 export const getVideo = (id) => {
   return function(dispatch) {
-    axios.get('http://localhost:8000/videos?id=' + id)
+    axios.get('http://localhost:8000/videos/' + id)
     .then(function(response) {
       dispatch(receiveVideo(response))
+    })
+  }
+}
+
+export const likeVideo = (id) => {
+  return function(dispatch) {
+    axios.put('http://localhost:8000/videos/videos/' + id + '/like')
+    .then(function(response) {
+      dispatch(getVideo(id))
+    })
+  }
+}
+
+export const unlikeVideo = (id) => {
+  return function(dispatch) {
+    axios.put('http://localhost:8000/videos/videos/' + id + '/unlike')
+    .then(function(response) {
+      dispatch(getVideo(id))
     })
   }
 }
