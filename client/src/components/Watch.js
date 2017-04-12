@@ -16,21 +16,22 @@ class Watch extends Component {
 
   render() {
     let video = this.props.video
-    let title, description, likes, unlikes, date, numberviews, username
+    let videoplayer, title, description, likes, unlikes, date, numberviews, username = null
     if (video !== null) {
-      video = video.video[0]
-      title = video.title
-      description = video.description
-      likes = video.likes
-      unlikes = video.unlikes
-      date = video.date
-      numberviews = video.numberviews
-      username = video.user.username
+      const v = video.video[0]
+      title = v.title
+      description = v.description
+      likes = v.likes
+      unlikes = v.unlikes
+      date = v.date
+      numberviews = v.numberviews
+      username = v.user.username
+      videoplayer = (<Video id={v.videoId} />)
     }
     return (
     <div>
       <div className="row">
-        { video !== null && <Video id={video.videoId} />}
+        {videoplayer}
       </div>
       <div className="row">
         <div  className="col-md-2"></div>

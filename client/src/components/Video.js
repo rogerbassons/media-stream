@@ -3,11 +3,21 @@ import {MediaPlayer} from 'dashjs';
 
 class Video extends Component {
 
-  componentDidMount() {
-    const url = "http://localhost/videos/" + this.props.id + "/" + this.props.id + ".mpd"
+  createDashPlayer(id) {
+    const url = "http://localhost/videos/" + id + "/" + id + ".mpd"
     this.video = this.refs["dashplayer"]
     this.player = MediaPlayer().create()
     this.player.initialize(this.video, url, true)
+  }
+
+  componentDidMount() {
+    this.createDashPlayer(this.props.id)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.id !== nextProps.id) {
+      this.createDashPlayer(nextProps.id)
+    }
   }
 
   render() {
