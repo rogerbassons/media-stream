@@ -17,4 +17,4 @@ class Comment(models.Model):
     text = models.CharField(max_length=1000)
     date = models.DateField(auto_now=False, auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, related_name="comments", on_delete=models.CASCADE)

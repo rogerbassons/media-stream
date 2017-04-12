@@ -7,6 +7,12 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('username', 'last_name')
 
+class CommentSerializer(serializers.HyperlinkedModelSerializer):
+    user = UserSerializer(read_only=True)
+    class Meta:
+        model = Comment
+        fields = ('text', 'user', 'date')
+
 class VideoThumbSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Video
@@ -14,13 +20,7 @@ class VideoThumbSerializer(serializers.HyperlinkedModelSerializer):
 
 class VideoSerializer(serializers.HyperlinkedModelSerializer):
     user = UserSerializer(read_only=True)
-    comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    comments = CommentSerializer(many=True, read_only=True)
     class Meta:
         model = Video
         fields = ('title', 'videoId', 'numberviews', 'likes', 'unlikes', 'date', 'description', 'user', 'comments')
-
-class CommentSerializer(serializers.HyperlinkedModelSerializer):
-    user = UserSerializer(read_only=True)
-    class Meta:
-        model = Comment
-        fields = ('text', 'user', 'date')
