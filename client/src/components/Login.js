@@ -32,7 +32,7 @@ class Login extends Component {
            return
          }
          dispatch(doLogin(user.value, pass.value))
-         this.props.history.push('/')
+         this.props.history.goBack()
        }}>
          <FieldGroup
          id="formControlsUser"
