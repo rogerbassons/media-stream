@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
+import { Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import Video from '../components/Video'
 import {getVideo, likeVideo, unlikeVideo} from '../actions'
@@ -15,12 +16,14 @@ class Watch extends Component {
   }
 
   handleReaction(reaction) {
-    const { dispatch } = this.props
+    const { dispatch, token } = this.props
+    const id = this.props.video.video.videoId
     if (reaction === 'like') {
-      dispatch(likeVideo(this.props.video.video[0].videoId))
+      dispatch(likeVideo(id, token.token))
     } else if (reaction === 'unlike') {
-      dispatch(unlikeVideo(this.props.video.video[0].videoId))
+      dispatch(unlikeVideo(id, token.token))
     }
+    this.history.push(this.history.location.pathname)
   }
 
   render() {
@@ -48,8 +51,12 @@ class Watch extends Component {
     if (token !== null) {
       reactions = (
         <div>
-          <span className="rightmargin glyphicon glyphicon-thumbs-up" onClick={()=>this.handleReaction("like")}>{likes}</span>
-          <span className="glyphicon glyphicon-thumbs-down" onClick={()=>this.handleReaction("unlike")}>{unlikes}</span>
+          <Button className="btn btn-success rightmargin glyphicon glyphicon-thumbs-up" onClick={()=>this.handleReaction("like")}>
+            {likes}
+          </Button>
+          <Button className="btn btn-danger rightmargin glyphicon glyphicon-thumbs-down" onClick={()=>this.handleReaction("unlike")}>
+            {unlikes}
+          </Button>
         </div>
       )
     }

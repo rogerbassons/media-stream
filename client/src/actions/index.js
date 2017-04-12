@@ -3,6 +3,7 @@ export const RECEIVE_VIDEOS = 'RECEIVE_VIDEOS'
 export const RECEIVE_VIDEO = 'RECEIVE_VIDEO'
 export const RECEIVE_TOKEN = 'RECEIVE_TOKEN'
 export const DELETE_TOKEN = 'DELETE_TOKEN'
+const base = "http://localhost:8000"
 
 export const receiveVideos = json => ({
   type: RECEIVE_VIDEOS,
@@ -25,7 +26,7 @@ export const deleteToken = () => ({
 
 export const fetchVideos = () => {
   return function(dispatch) {
-    axios.get('http://localhost:8000/videos/last')
+    axios.get(base + '/videos/last')
     .then(function(response) {
       dispatch(receiveVideos(response))
     })
@@ -34,7 +35,7 @@ export const fetchVideos = () => {
 
 export const searchVideos = (text) => {
   return function(dispatch) {
-    axios.get('http://localhost:8000/videos?search=' + text)
+    axios.get(base + '/videos?search=' + text)
     .then(function(response) {
       dispatch(receiveVideos(response))
     })
@@ -43,25 +44,33 @@ export const searchVideos = (text) => {
 
 export const getVideo = (id) => {
   return function(dispatch) {
-    axios.get('http://localhost:8000/videos/' + id)
+    axios.get(base + '/videos/' + id)
     .then(function(response) {
       dispatch(receiveVideo(response))
     })
   }
 }
 
-export const likeVideo = (id) => {
+export const likeVideo = (id, token) => {
   return function(dispatch) {
-    axios.put('http://localhost:8000/videos/videos/' + id + '/like')
+    const instance = axios.create({
+      baseURL: base + '/videos/' + id + '/like',
+      headers: {'Authorization': 'Token ' + token}
+    });
+    instance.put()
     .then(function(response) {
       dispatch(getVideo(id))
     })
   }
 }
 
-export const unlikeVideo = (id) => {
+export const UnlikeVideo = (id, token) => {
   return function(dispatch) {
-    axios.put('http://localhost:8000/videos/videos/' + id + '/unlike')
+    const instance = axios.create({
+      baseURL: base + '/videos/' + id + '/unlike',
+      headers: {'Authorization': 'Token ' + token}
+    });
+    instance.put()
     .then(function(response) {
       dispatch(getVideo(id))
     })
@@ -70,11 +79,12 @@ export const unlikeVideo = (id) => {
 
 export const doLogin = (user, pass) => {
   return function(dispatch) {
-    axios.post('http://localhost:8000/login', {
+    axios.post(base + '/login', {
       username: user,
       password: pass
     })
     .then(function(response) {
+      console.log(response)
       dispatch(receiveToken(response))
     })
   }

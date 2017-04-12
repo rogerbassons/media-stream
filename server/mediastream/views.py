@@ -3,18 +3,26 @@ from rest_framework import viewsets
 from .models import Video
 from .serializers import VideoSerializer
 from .serializers import VideoThumbSerializer
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.decorators import list_route
 from rest_framework import generics
 
 # Create your views here.
 
-class VideoById(generics.RetrieveAPIView):
+class VideoByIdView(generics.RetrieveAPIView):
     serializer_class = VideoSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
     lookup_field = 'videoId'
     queryset = Video.objects.all()
 
+
+class LikeVideoView(generics.UpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = VideoSerializer
+
+class UnlikeVideoView(generics.UpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = VideoSerializer
 
 class VideoViewSet(viewsets.ModelViewSet):
     """
