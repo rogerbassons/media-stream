@@ -6,8 +6,6 @@ from django.contrib.auth.models import User
 class Video(models.Model):
     title = models.CharField(max_length=200)
     videoId = models.CharField(max_length=200)
-    likes = models.BigIntegerField()
-    unlikes = models.BigIntegerField()
     date = models.DateField(auto_now=False, auto_now_add=True)
     description = models.CharField(max_length=1000)
     numberviews = models.BigIntegerField()
@@ -18,3 +16,11 @@ class Comment(models.Model):
     date = models.DateField(auto_now=False, auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     video = models.ForeignKey(Video, related_name="comments", on_delete=models.CASCADE)
+
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, related_name="likes", on_delete=models.CASCADE)
+
+class Unlike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, related_name="unlikes", on_delete=models.CASCADE)

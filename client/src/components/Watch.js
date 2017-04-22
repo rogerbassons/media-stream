@@ -3,6 +3,7 @@ import { withRouter } from 'react-router'
 import { Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import Video from '../components/Video'
+import Comments from '../components/Comments'
 import {getVideo, likeVideo, unlikeVideo} from '../actions'
 import { Panel } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -28,7 +29,7 @@ class Watch extends Component {
 
   render() {
     const { video, token }= this.props
-    let videoplayer, title, description, likes, unlikes, date, numberviews, username
+    let videoplayer, title, description, likes, unlikes, date, numberviews, username, comments
     if (video !== null) {
       const v = video.video
       title = v.title
@@ -38,6 +39,7 @@ class Watch extends Component {
       date = v.date
       numberviews = v.numberviews
       username = v.user.username
+      comments = v.comments
       videoplayer = (<Video id={v.videoId} />)
     }
 
@@ -104,6 +106,8 @@ class Watch extends Component {
         </Panel>
         <div  className="col-md-2"></div>
       </div>
+
+      <Comments comments={comments}/>
 
     </div>
     )

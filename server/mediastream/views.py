@@ -1,12 +1,12 @@
 from django.shortcuts import render
-from rest_framework import viewsets
-from .models import Video
-from .serializers import VideoSerializer
-from .serializers import VideoThumbSerializer
+from rest_framework import viewsets, status
+from .models import Video, Like, Unlike
+from .serializers import VideoSerializer, VideoThumbSerializer, LikeSerializer, UnlikeSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-from rest_framework.decorators import list_route
+from rest_framework.decorators import list_route, api_view, permission_classes
 from rest_framework import generics
-
+from rest_framework.response import Response
+import pprint
 # Create your views here.
 
 class VideoByIdView(generics.RetrieveAPIView):
@@ -15,14 +15,38 @@ class VideoByIdView(generics.RetrieveAPIView):
     lookup_field = 'videoId'
     queryset = Video.objects.all()
 
+@api_view(['PUT'])
+@permission_classes((IsAuthenticated, ))
+def likeVideoView(request, videoId):
+    id = videoId
+    try:
+        v = Video.objects.get(videoId=id)
+    except v.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'PUT':
+        if not v.likes.filter(user=request.user):
+            v.unlikes.filter(user=request.user).delete()
+            l = Like(user=request.user, video=v)
+            l.save()
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
-class LikeVideoView(generics.UpdateAPIView):
-    permission_classes = (IsAuthenticated,)
-    serializer_class = VideoSerializer
 
-class UnlikeVideoView(generics.UpdateAPIView):
-    permission_classes = (IsAuthenticated,)
-    serializer_class = VideoSerializer
+@api_view(['PUT'])
+@permission_classes((IsAuthenticated, ))
+def unLikeVideoView(request, videoId):
+    id = videoId
+    try:
+        v = Video.objects.get(videoId=id)
+    except v.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'PUT':
+        if not v.unlikes.filter(user=request.user):
+            v.likes.filter(user=request.user).delete()
+            l = Unlike(user=request.user, video=v)
+            l.save()
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class VideoViewSet(viewsets.ModelViewSet):
     """

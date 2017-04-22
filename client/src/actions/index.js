@@ -3,7 +3,7 @@ export const RECEIVE_VIDEOS = 'RECEIVE_VIDEOS'
 export const RECEIVE_VIDEO = 'RECEIVE_VIDEO'
 export const RECEIVE_TOKEN = 'RECEIVE_TOKEN'
 export const DELETE_TOKEN = 'DELETE_TOKEN'
-const base = "http://localhost:8000"
+const base = "http://192.168.1.4:8000"
 
 export const receiveVideos = json => ({
   type: RECEIVE_VIDEOS,
@@ -54,7 +54,7 @@ export const getVideo = (id) => {
 export const likeVideo = (id, token) => {
   return function(dispatch) {
     const instance = axios.create({
-      baseURL: base + '/videos/' + id + '/like',
+      baseURL: base + '/videos/' + id + "/like/",
       headers: {'Authorization': 'Token ' + token}
     });
     instance.put()
@@ -64,7 +64,7 @@ export const likeVideo = (id, token) => {
   }
 }
 
-export const UnlikeVideo = (id, token) => {
+export const unlikeVideo = (id, token) => {
   return function(dispatch) {
     const instance = axios.create({
       baseURL: base + '/videos/' + id + '/unlike',
