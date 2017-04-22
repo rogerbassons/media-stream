@@ -84,8 +84,19 @@ export const doLogin = (user, pass) => {
       password: pass
     })
     .then(function(response) {
-      console.log(response)
       dispatch(receiveToken(response))
+    })
+  }
+}
+
+export const commentVideo = (comment, id, token) => {
+  return function(dispatch) {
+    var config = {
+      headers: {'Authorization': 'Token ' + token}
+    };
+    axios.put(base + /videos/ + id + /comments/, {text: comment}, config)
+    .then(function(response) {
+      dispatch(receiveVideo(response))
     })
   }
 }

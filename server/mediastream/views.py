@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from rest_framework import viewsets, status
-from .models import Video, Like, Unlike
-from .serializers import VideoSerializer, VideoThumbSerializer
+from .models import Video, Like, Unlike, Comment
+from .serializers import VideoSerializer, VideoThumbSerializer, CommentSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.decorators import list_route, api_view, permission_classes
 from rest_framework import generics
 from rest_framework.response import Response
-import pprint
+import json
 # Create your views here.
 
 class VideoByIdView(generics.RetrieveAPIView):
@@ -47,6 +47,21 @@ def unLikeVideoView(request, videoId):
             l.save()
             return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['PUT'])
+@permission_classes((IsAuthenticated, ))
+def commentVideoView(request, videoId):
+    id = videoId
+    try:
+        v = Video.objects.get(videoId=id)
+    except v.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'PUT':
+        if request.data.get('text'):
+            c = Comment(text=request.data.get('text'), user=request.user, video=v)
+            c.save()
+            return Response(VideoSerializer(v).data, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class VideoViewSet(viewsets.ModelViewSet):
     """

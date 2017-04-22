@@ -13,7 +13,6 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
         model = Comment
         fields = ('text', 'user', 'date')
 
-
 class VideoThumbSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Video

@@ -29,7 +29,7 @@ class Watch extends Component {
 
   render() {
     const { video, token }= this.props
-    let videoplayer, title, description, likes, unlikes, date, numberviews, username, comments
+    let videoplayer, title, description, likes, unlikes, date, numberviews, username, comments, videoId
     if (video !== null) {
       const v = video.video
       title = v.title
@@ -40,7 +40,8 @@ class Watch extends Component {
       numberviews = v.numberviews
       username = v.user.username
       comments = v.comments
-      videoplayer = (<Video id={v.videoId} />)
+      videoId = v.videoId
+      videoplayer = (<Video id={videoId} />)
     }
 
     let reactions = (
@@ -107,7 +108,7 @@ class Watch extends Component {
         <div  className="col-md-2"></div>
       </div>
 
-      <Comments comments={comments}/>
+      <Comments comments={comments} videoId={videoId}/>
 
     </div>
     )
