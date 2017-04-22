@@ -14,14 +14,6 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('text', 'user', 'date')
 
 
-
-class UnlikeSerializer(serializers.HyperlinkedModelSerializer):
-    user = UserSerializer(read_only=True)
-    class Meta:
-        model = Unlike
-        fields = ('user')
-
-
 class VideoThumbSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Video
@@ -39,10 +31,3 @@ class VideoSerializer(serializers.HyperlinkedModelSerializer):
         return obj.likes.count()
     def get_unlikes(self, obj):
         return obj.unlikes.count()
-
-class LikeSerializer(serializers.HyperlinkedModelSerializer):
-    user = UserSerializer(read_only=False)
-    video = VideoSerializer(read_only=False)
-    class Meta:
-        model = Like
-        fields = ('user', 'video')
