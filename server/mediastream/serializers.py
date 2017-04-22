@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Video, Comment, Like, Unlike
+from .models import Video, Comment
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):

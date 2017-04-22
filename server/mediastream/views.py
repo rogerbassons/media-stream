@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets, status
 from .models import Video, Like, Unlike
-from .serializers import VideoSerializer, VideoThumbSerializer, LikeSerializer, UnlikeSerializer
+from .serializers import VideoSerializer, VideoThumbSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.decorators import list_route, api_view, permission_classes
 from rest_framework import generics
