@@ -12,10 +12,16 @@ import json
 class VideoByIdView(generics.RetrieveAPIView):
     serializer_class = VideoSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
-    lookup_field = 'videoId'
-    queryset = Video.objects.all()
+    lookup_field = "videoId"
 
-@api_view(['PUT'])
+    def get_queryset(self):
+        videoId = self.kwargs['videoId']
+        v = Video.objects.filter(videoId__iexact=videoId)[0]
+        v.numberviews += 1
+        v.save()
+        return Video.objects.filter(videoId__iexact=videoId)
+
+@api_view(['PUT', 'DELETE'])
 @permission_classes((IsAuthenticated, ))
 def likeVideoView(request, videoId):
     id = videoId
@@ -28,11 +34,16 @@ def likeVideoView(request, videoId):
             v.unlikes.filter(user=request.user).delete()
             l = Like(user=request.user, video=v)
             l.save()
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(VideoSerializer(v, context={'request': request}).data, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    if request.method == 'DELETE':
+        if v.likes.filter(user=request.user):
+            v.likes.filter(user=request.user).delete()
+            v.save()
+            return Response(VideoSerializer(v, context={'request': request}).data, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-@api_view(['PUT'])
+@api_view(['PUT', 'DELETE'])
 @permission_classes((IsAuthenticated, ))
 def unLikeVideoView(request, videoId):
     id = videoId
@@ -45,7 +56,13 @@ def unLikeVideoView(request, videoId):
             v.likes.filter(user=request.user).delete()
             l = Unlike(user=request.user, video=v)
             l.save()
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(VideoSerializer(v, context={'request': request}).data, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    if request.method == 'DELETE':
+        if v.unlikes.filter(user=request.user):
+            v.unlikes.filter(user=request.user).delete()
+            v.save()
+            return Response(VideoSerializer(v, context={'request': request}).data, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['PUT'])
@@ -60,7 +77,7 @@ def commentVideoView(request, videoId):
         if request.data.get('text'):
             c = Comment(text=request.data.get('text'), user=request.user, video=v)
             c.save()
-            return Response(VideoSerializer(v).data, status=status.HTTP_201_CREATED)
+            return Response(VideoSerializer(v, context={'request': request}).data, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class VideoViewSet(viewsets.ModelViewSet):

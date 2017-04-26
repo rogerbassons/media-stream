@@ -23,10 +23,19 @@ class VideoSerializer(serializers.HyperlinkedModelSerializer):
     comments = CommentSerializer(many=True, read_only=True)
     likes = serializers.SerializerMethodField()
     unlikes = serializers.SerializerMethodField()
+    currentuserlike = serializers.SerializerMethodField()
     class Meta:
         model = Video
-        fields = ('title', 'videoId', 'numberviews', 'likes', 'unlikes', 'date', 'description', 'user', 'comments')
+        fields = ('title', 'videoId', 'numberviews', 'likes', 'unlikes', 'date', 'description', 'user', 'comments', 'currentuserlike')
     def get_likes(self, obj):
         return obj.likes.count()
     def get_unlikes(self, obj):
         return obj.unlikes.count()
+    def get_currentuserlike(self, obj):
+        if 'request' in self.context:
+            user = self.context['request'].user
+            if obj.likes.all().filter(user__id=user.id):
+                return 'LIKE'
+            elif obj.unlikes.all().filter(user__id=user.id):
+                return 'UNLIKE'
+        return ' '

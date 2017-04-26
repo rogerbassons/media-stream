@@ -42,13 +42,22 @@ export const searchVideos = (text) => {
   }
 }
 
-export const getVideo = (id) => {
-  return function(dispatch) {
-    axios.get(base + '/videos/' + id)
-    .then(function(response) {
-      dispatch(receiveVideo(response))
-    })
-  }
+export const getVideo = (id, token) => {
+    return function(dispatch) {
+      let instance = axios.create({
+        baseURL: base + '/videos/' + id,
+      });
+      if (token !== null) {
+        instance = axios.create({
+          baseURL: base + '/videos/' + id,
+          headers: {'Authorization': 'Token ' + token}
+        });
+      }
+      instance.get()
+      .then(function(response) {
+        dispatch(receiveVideo(response))
+      })
+    }
 }
 
 export const likeVideo = (id, token) => {
@@ -59,7 +68,9 @@ export const likeVideo = (id, token) => {
     });
     instance.put()
     .then(function(response) {
-      dispatch(getVideo(id))
+      if (response.status !== 204) {
+        dispatch(receiveVideo(response))
+      }
     })
   }
 }
@@ -72,7 +83,35 @@ export const unlikeVideo = (id, token) => {
     });
     instance.put()
     .then(function(response) {
-      dispatch(getVideo(id))
+      if (response.status !== 204) {
+        dispatch(receiveVideo(response))
+      }
+    })
+  }
+}
+
+export const deleteLikeVideo = (id, token) => {
+  return function(dispatch) {
+    const instance = axios.create({
+      baseURL: base + '/videos/' + id + "/like/",
+      headers: {'Authorization': 'Token ' + token}
+    });
+    instance.delete()
+    .then(function(response) {
+        dispatch(receiveVideo(response))
+    })
+  }
+}
+
+export const deleteUnlikeVideo = (id, token) => {
+  return function(dispatch) {
+    const instance = axios.create({
+      baseURL: base + '/videos/' + id + '/unlike',
+      headers: {'Authorization': 'Token ' + token}
+    });
+    instance.delete()
+    .then(function(response) {
+        dispatch(receiveVideo(response))
     })
   }
 }

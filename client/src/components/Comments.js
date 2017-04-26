@@ -22,9 +22,7 @@ class Comments extends Component {
     }
     let comment
     let commentForm = (
-      <div className="row">
-      <div className="col-md-2"></div>
-      <div className="col-md-8">
+      <div>
       <form onSubmit={e => {
         e.preventDefault()
         if (!comment.value.trim()) {
@@ -45,8 +43,6 @@ class Comments extends Component {
       </Button>
       </form>
       </div>
-      <div className="col-md-2"></div>
-      </div>
     )
     if (token === null) {
       commentForm = null
@@ -60,18 +56,14 @@ class Comments extends Component {
       <p> {comment.text} </p>
       </div>)
       commentPanel = (
-        <div>
-        <div  className="col-md-2"></div>
-        <Panel className="col-md-8">
+        <Panel>
         {listComments}
-        <div  className="col-md-2"></div>
         </Panel>
-        </div>
       )
     }
 
     return (
-      <div className="row">
+      <div>
       {commentForm}
       {commentPanel}
       </div>
