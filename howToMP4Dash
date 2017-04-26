@@ -1,0 +1,6 @@
+Create thumb:
+ffmpeg -i input.flv -ss 00:00:00 -vframes 1 out.png
+
+Dashify:
+ffmpeg -i 1.mp4 -c:v libx264 -b:v 4000k -r 24 -x264opts keyint=48:min-keyint=48:no-scenecut -profile:v main -preset medium -movflags +faststart -c:a aac -b:a 128k -ac 2 out1.mp4
+MP4Box -dash-strict 4000 -rap -bs-switching no -profile dashavc264:live -out 1.mpd out1.mp4#audio out1.mp4#video
