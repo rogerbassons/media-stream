@@ -37,7 +37,8 @@ DocumentRoot "/srv/http"
     RewriteRule ^ index.html [L]
 </Directory>
 
-
+WSGIDaemonProcess django user=http group=http home=/srv/http/api/
+WSGIProcessGroup django
 WSGIScriptAlias /api /srv/http/api/server/wsgi.py
 WSGIPythonPath /srv/http/api
 

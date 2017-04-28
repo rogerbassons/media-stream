@@ -8,8 +8,8 @@ var port = window.location.port
 if (port !== 0) {
   url += ":" + port
 }
-url = "localhost:8000/"
-const base = "http://" + url //+ "/api/"
+//const base = "http://localhost:8000/" //DEVEL
+const base = "http://" + url + "/api/"
 
 export const receiveVideos = json => ({
   type: RECEIVE_VIDEOS,
