@@ -29,3 +29,6 @@ chrome-user-data
 .idea
 *.iml
 .vscode
+videos/*
+thumbs/*
+server/tmp/*
