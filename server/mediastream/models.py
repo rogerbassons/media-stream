@@ -8,8 +8,9 @@ class Video(models.Model):
     videoId = models.CharField(max_length=200)
     date = models.DateField(auto_now=False, auto_now_add=True)
     description = models.CharField(max_length=1000)
-    numberviews = models.BigIntegerField()
+    numberviews = models.BigIntegerField(default=0)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    enabled = models.BooleanField(default=False)
 
 class Comment(models.Model):
     text = models.CharField(max_length=1000)

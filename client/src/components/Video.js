@@ -4,7 +4,12 @@ import {MediaPlayer} from 'dashjs';
 class Video extends Component {
 
   createDashPlayer(id) {
-    const url = "http://192.168.1.4/videos/" + id + "/" + id + ".mpd"
+    var location = window.location.hostname
+    var port = window.location.port
+    /*if (port !== 0) {
+      location += ":" + port
+    }*/
+    const url = "http://" + location + "/videos/" + id + "/" + id + ".mpd"
     this.video = this.refs["dashplayer"]
     this.player = MediaPlayer().create()
     this.player.initialize(this.video, url, true)

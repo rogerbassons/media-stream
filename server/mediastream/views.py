@@ -6,20 +6,35 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from rest_framework.decorators import list_route, api_view, permission_classes
 from rest_framework import generics
 from rest_framework.response import Response
-import json
+from .forms import UploadFileForm
+import hashlib
+import datetime
+import os
 # Create your views here.
 
-class VideoByIdView(generics.RetrieveAPIView):
-    serializer_class = VideoSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
-    lookup_field = "videoId"
-
-    def get_queryset(self):
-        videoId = self.kwargs['videoId']
-        v = Video.objects.filter(videoId__iexact=videoId)[0]
+@api_view(['GET', 'PUT'])
+@permission_classes((IsAuthenticatedOrReadOnly, ))
+def VideoByIdView(request, videoId):
+    id = videoId
+    try:
+        v = Video.objects.get(videoId=id)
+    except v.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        v = Video.objects.get(videoId=videoId)
         v.numberviews += 1
         v.save()
-        return Video.objects.filter(videoId__iexact=videoId)
+        return Response(VideoSerializer(v, context={'request': request}).data, status=status.HTTP_200_OK)
+    if request.method == 'PUT' and request.user:
+        title = request.data.get('title')
+        description = request.data.get('description')
+        if  title and description and v.user == request.user:
+            v.title = title
+            v.description = description
+            v.enabled = True
+            v.save()
+            return Response(VideoSerializer(v, context={'request': request}).data, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT', 'DELETE'])
 @permission_classes((IsAuthenticated, ))
@@ -80,6 +95,22 @@ def commentVideoView(request, videoId):
             return Response(VideoSerializer(v, context={'request': request}).data, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+
+def handle_uploaded_file(f, name):
+    with open(name, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+def hashFile(file, string):
+    BLOCKSIZE = 65536
+    hasher = hashlib.md5()
+    buf = file.read(BLOCKSIZE)
+    while len(buf) > 0:
+        hasher.update(buf)
+        buf = file.read(BLOCKSIZE)
+    hasher.update(string.encode('utf-8'))
+    return hasher.hexdigest()
+
 class VideoViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows to get videos
@@ -98,9 +129,37 @@ class VideoViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return queryset
 
+    def create(self, request):
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES['file']
+
+            id = hashFile(file,request.user.get_username() + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            saveDir = 'tmp/'
+            extension = '.' + file.name.rsplit('.', 1)[-1]
+            path = saveDir + id + extension
+            dashPath = saveDir + id + 'DASH.mp4'
+
+            handle_uploaded_file(file, path)
+
+            os.system('ffmpeg -i ' + path + ' -ss 00:00:00 -vframes 1 -filter:v scale=\'min(1280\, iw):-1\' ../thumbs/' + id + '.png')
+            os.system('ffmpeg -i ' + path + ' -c:v libx264 -b:v 4000k -r 24 -x264opts keyint=48:min-keyint=48:no-scenecut -profile:v main -preset medium -movflags +faststart -c:a aac -b:a 128k -ac 2 ' + dashPath)
+            os.system('mkdir ../videos/' + id)
+            os.system('MP4Box -dash-strict 4000 -rap -bs-switching no -profile dashavc264:live -out ../videos/' + id + '/' + id + '.mpd ' + dashPath + '#audio ' + dashPath + '#video')
+
+            os.remove(dashPath)
+            os.remove(path)
+
+            v = Video(videoId=id, user=request.user)
+            v.save()
+            return Response(data={'videoId': id},status=status.HTTP_200_OK)
+        else:
+            form = UploadFileForm()
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
     @list_route()
     def last(self, request):
-        last_videos = Video.objects.all().order_by('-date')[:20]
+        last_videos = Video.objects.all().exclude(enabled=False).order_by('-date')[:20]
 
         page = self.paginate_queryset(last_videos)
         if page is not None:
@@ -112,7 +171,7 @@ class VideoViewSet(viewsets.ModelViewSet):
 
     @list_route()
     def best(self, request):
-        best_videos = Video.objects.all().order_by('-likes')[:20]
+        best_videos = Video.objects.all().exclude(enabled=False).order_by('-likes')[:20]
 
         page = self.paginate_queryset(best_videos)
         if page is not None:

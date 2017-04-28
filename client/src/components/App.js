@@ -8,6 +8,7 @@ import Watch from '../components/Watch'
 import Front from '../components/Front'
 import Search from '../components/Search'
 import Login from '../components/Login'
+import Upload from '../components/Upload'
 import Bar from '../components/Bar'
 import 'bootstrap/dist/css/bootstrap.css'
 
@@ -24,6 +25,7 @@ class App extends Component {
           <div className="content">
             <Route exact path="/" component={Front}/>
             <Route exact path="/login" component={Login}/>
+            <Route exact path="/upload" component={Upload}/>
             <Route path="/videos" component={Search}/>
             <Route path="/watch" component={Watch}/>
           </div>
