@@ -1,0 +1,23 @@
+
+
+    upstream django {
+    	  server unix:///usr/share/nginx/html/api/django.sock;
+    }
+
+
+    server {
+        listen       80;
+        server_name  localhost;
+
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+        }
+
+	location /api {
+		rewrite ^/api/(.*) /$1  break;
+		uwsgi_pass  django;
+     		include     /etc/nginx/uwsgi_params;
+	}
+
+  error_page  404              /index.html;
