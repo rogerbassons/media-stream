@@ -24,8 +24,9 @@ class Bar extends Component {
     if (token !== null && token.token !== null) {
       navi = (
         <Nav pullRight>
-          <NavItem eventKey={1} onClick={()=>this.handleLink("/upload")}><span className="glyphicon glyphicon-plus"></span></NavItem>
-          <NavItem eventKey={2} onClick={()=>this.handleLink("logout")}> Logout </NavItem>
+          <NavItem eventKey={1} onClick={()=>this.handleLink("/live")}><span className="glyphicon glyphicon-record"></span></NavItem>
+          <NavItem eventKey={2} onClick={()=>this.handleLink("/upload")}><span className="glyphicon glyphicon-plus"></span></NavItem>
+          <NavItem eventKey={3} onClick={()=>this.handleLink("logout")}> Logout </NavItem>
         </Nav>
       )
     }

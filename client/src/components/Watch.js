@@ -13,6 +13,7 @@ class Watch extends Component {
   constructor(props) {
     super(props)
     const { dispatch, token } = props
+    props.history.location.search.split('=')
     const videoId = props.history.location.search.split('=')[1]
     dispatch(getVideo(videoId, token && token.token))
 

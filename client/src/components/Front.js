@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Videos from '../components/Videos'
-import {fetchVideos} from '../actions'
+import Streams from '../components/Streams'
+import {fetchVideos, fetchStreams} from '../actions'
 import 'bootstrap/dist/css/bootstrap.css'
 
 class Front extends Component {
@@ -10,23 +11,28 @@ class Front extends Component {
     super(props)
     const { dispatch } = this.props
     dispatch(fetchVideos())
+    dispatch(fetchStreams())
   }
 
  render() {
-   const { videos } = this.props
-   const isEmpty = videos.length === 0
+   const { videos, streams } = this.props
    return (
+     <div>
      <div className="row">
-       {!isEmpty && <Videos videos={videos} />}
+       {videos.length !== 0 && <Videos videos={videos} />}
+    </div>
+    <div className="row">
+      {streams.length !== 0 && <Streams streams={streams} />}
+    </div>
     </div>
     )
   }
 }
 
 const mapStateToProps = state => {
-  const { videos } = state
+  const { videos, streams } = state
   return {
-    videos
+    videos, streams
   }
 }
 

@@ -1,16 +1,46 @@
 from django.shortcuts import render
 from rest_framework import viewsets, status
-from .models import Video, Like, Unlike, Comment
-from .serializers import VideoSerializer, VideoThumbSerializer, CommentSerializer
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from .models import Video, Like, Unlike, Comment, LiveStream
+from .serializers import VideoSerializer, VideoThumbSerializer, CommentSerializer,  LiveStreamSerializer
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 from rest_framework.decorators import list_route, api_view, permission_classes
 from rest_framework import generics
 from rest_framework.response import Response
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponseRedirect, QueryDict
 from .forms import UploadFileForm
 import hashlib
 import datetime
 import os
 # Create your views here.
+
+@api_view(['POST'])
+@permission_classes((AllowAny, ))
+def on_publish(request):
+    key = request.POST['name']
+
+    try:
+        ls = LiveStream.objects.get(key=key)
+        ls.enabled = True
+        ls.live_at = datetime.datetime.now()
+        ls.save()
+        return HttpResponseRedirect(ls.user.username)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+@permission_classes((AllowAny, ))
+def on_publish_done(request):
+    key = request.POST['name']
+
+    s = LiveStream.objects.get(key=key)
+    s.enabled = False
+    s.live_at = None
+    s.save()
+
+    return Response(status=status.HTTP_200_OK)
+
 
 @api_view(['GET', 'PUT'])
 @permission_classes((IsAuthenticatedOrReadOnly, ))
@@ -172,6 +202,64 @@ class VideoViewSet(viewsets.ModelViewSet):
     @list_route()
     def best(self, request):
         best_videos = Video.objects.all().exclude(enabled=False).order_by('-likes')[:20]
+
+        page = self.paginate_queryset(best_videos)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(best_videos, many=True)
+        return Response(serializer.data)
+
+class LiveStreamViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    queryset = LiveStream.objects.all()
+    serializer_class = LiveStreamSerializer
+
+
+    def get_queryset(self):
+        searchtext = self.request.query_params.get('search', None)
+        if searchtext is not None:
+            queryset = queryset.filter(title__icontains=searchtext)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return queryset
+
+    def create(self, request):
+        put = QueryDict(request.body)
+        title = put.get('title')
+        description = put.get('description')
+        user = request.user
+        try:
+            ls = LiveStream.objects.get(user=user)
+            ls.title = title
+            ls.description = description
+            ls.save()
+            return Response(data={'key': ls.key},status=status.HTTP_201_CREATED)
+        except ObjectDoesNotExist:
+            hasher = hashlib.md5()
+            hasher.update(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S").encode('utf-8'))
+            hasher.update(request.user.get_username().encode('utf-8'))
+            key = hasher.hexdigest()
+
+            ls = LiveStream(user=user, title=title, description=description, key=key)
+            return Response(data={'key': key},status=status.HTTP_201_CREATED)
+
+    @list_route()
+    def last(self, request):
+        last_videos = LiveStream.objects.all().exclude(enabled=False).order_by('-live_at')[:20]
+
+        page = self.paginate_queryset(last_videos)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(last_videos, many=True)
+        return Response(serializer.data)
+
+    @list_route()
+    def best(self, request):
+        best_videos = LiveStream.objects.all().exclude(enabled=False).order_by('-likes')[:20]
 
         page = self.paginate_queryset(best_videos)
         if page is not None:

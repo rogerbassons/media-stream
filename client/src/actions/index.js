@@ -1,19 +1,32 @@
 import axios from 'axios'
 export const RECEIVE_VIDEOS = 'RECEIVE_VIDEOS'
+export const RECEIVE_STREAMS = 'RECEIVE_STREAMS'
 export const RECEIVE_VIDEO = 'RECEIVE_VIDEO'
-export const RECEIVE_TOKEN = 'RECEIVE_TOKEN'
+export const RECEIVE_TOKENUSER = 'RECEIVE_TOKENUSER'
 export const DELETE_TOKEN = 'DELETE_TOKEN'
+export const RECEIVE_LIVESTREAMKEY = 'RECEIVE_LIVESTREAMKEY'
+
+const devel = false
 var url = window.location.hostname
 var port = window.location.port
 if (port !== 0) {
   url += ":" + port
 }
-//const base = "http://localhost:8000/" //DEVEL
-const base = "http://" + url + "/api/"
+var base = "http://" + url + "/api/"
+
+if (devel) {
+  base = "http://localhost:8000/" //DEVEL
+}
+
 
 export const receiveVideos = json => ({
   type: RECEIVE_VIDEOS,
   videos: json.data.results
+})
+
+export const receiveStreams = json => ({
+  type: RECEIVE_STREAMS,
+  streams: json.data.results
 })
 
 export const receiveVideo = json => ({
@@ -21,13 +34,20 @@ export const receiveVideo = json => ({
   video: json.data
 })
 
-export const receiveToken = json => ({
-  type: RECEIVE_TOKEN,
-  token: json.data.token
+
+export const receiveTokenUser = (json, username) => ({
+  type: RECEIVE_TOKENUSER,
+  token: json.data.token,
+  username: username
 })
 
 export const deleteToken = () => ({
   type: DELETE_TOKEN
+})
+
+export const receiveLiveStreamKey = json => ({
+  type: RECEIVE_LIVESTREAMKEY,
+  livekey: json.data.key
 })
 
 export const fetchVideos = () => {
@@ -35,6 +55,15 @@ export const fetchVideos = () => {
     axios.get(base + 'videos/last/')
     .then(function(response) {
       dispatch(receiveVideos(response))
+    })
+  }
+}
+
+export const fetchStreams = () => {
+  return function(dispatch) {
+    axios.get(base + 'streams/last/')
+    .then(function(response) {
+      dispatch(receiveStreams(response))
     })
   }
 }
@@ -66,17 +95,16 @@ export const getVideo = (id, token) => {
     }
 }
 
-export const uploadFile= (file, title, description, token) => {
+export const startLive = (title, description, token) => {
   return function(dispatch) {
     axios.post(
-      base + 'videos/',
-      file,
+      base + 'streams/',
+      {title : title, description : description},
       { headers: {
-        'Authorization': 'Token ' + token,
-        'Content-Type' : 'multipart/form-data'
+        'Authorization': 'Token ' + token
       }}
     ).then(function(response) {
-        dispatch(sendTitleDescription(response.data.videoId, title, description, token))
+        dispatch(receiveLiveStreamKey(response))
     })
   }
 }
@@ -93,6 +121,21 @@ export const sendTitleDescription = (videoId, title, description, token) => {
       if (response.status !== 204) {
         dispatch(receiveVideo(response))
       }
+    })
+  }
+}
+
+export const uploadFile= (file, title, description, token) => {
+  return function(dispatch) {
+    axios.post(
+      base + 'videos/',
+      file,
+      { headers: {
+        'Authorization': 'Token ' + token,
+        'Content-Type' : 'multipart/form-data'
+      }}
+    ).then(function(response) {
+        dispatch(sendTitleDescription(response.data.videoId, title, description, token))
     })
   }
 }
@@ -160,7 +203,7 @@ export const doLogin = (user, pass) => {
       password: pass
     })
     .then(function(response) {
-      dispatch(receiveToken(response))
+      dispatch(receiveTokenUser(response, user))
     })
   }
 }

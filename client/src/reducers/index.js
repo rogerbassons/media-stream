@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux'
 import {
   RECEIVE_VIDEOS,
+  RECEIVE_STREAMS,
   RECEIVE_VIDEO,
-  RECEIVE_TOKEN,
-  DELETE_TOKEN
+  RECEIVE_TOKENUSER,
+  DELETE_TOKEN,
+  RECEIVE_LIVESTREAMKEY
 } from '../actions'
 
 function videos(state = [], action) {
@@ -11,6 +13,17 @@ function videos(state = [], action) {
     case RECEIVE_VIDEOS:
     return {
       videos: action.videos,
+    }
+    default:
+    return state
+  }
+}
+
+function streams(state = [], action) {
+  switch (action.type) {
+    case RECEIVE_STREAMS:
+    return {
+      streams: action.streams,
     }
     default:
     return state
@@ -30,23 +43,39 @@ function video(state = null, action) {
 
 function token(state = null, action) {
   switch (action.type) {
-    case RECEIVE_TOKEN:
+    case RECEIVE_TOKENUSER:
     return {
-      token: action.token
+      token: action.token,
+      username: action.username
     }
     case DELETE_TOKEN:
     return {
-      token: null
+      token: null,
+      username: null,
     }
     default:
     return state
   }
 }
 
+function livekey(state = null, action) {
+  switch (action.type) {
+    case RECEIVE_LIVESTREAMKEY:
+    return {
+      livekey: action.livekey
+    }
+    default:
+    return state
+  }
+}
+
+
 const rootReducer = combineReducers({
   videos,
   video,
-  token
+  token,
+  livekey,
+  streams
 })
 
 export default rootReducer

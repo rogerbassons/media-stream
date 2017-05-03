@@ -22,11 +22,14 @@ from mediastream import views
 
 router = routers.DefaultRouter()
 router.register(r'videos', views.VideoViewSet)
+router.register(r'streams', views.LiveStreamViewSet)
 
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
+    url('^on_publish/', views.on_publish),
+    url('^on_publish_done/', views.on_publish_done),
     url('videos/(?P<videoId>[a-fA-F\d]{32})/$', views.VideoByIdView),
     url('^videos/(?P<videoId>[a-fA-F\d]{32})/comment', views.commentVideoView),
     url('^videos/(?P<videoId>[a-fA-F\d]{32})/like', views.likeVideoView),

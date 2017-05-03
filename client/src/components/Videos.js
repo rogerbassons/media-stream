@@ -5,9 +5,10 @@ import 'bootstrap/dist/css/bootstrap.css'
 class Videos extends Component {
 
  render() {
+   var devel = false
    var location = window.location.hostname
    var port = window.location.port
-   if (port !== 0) {
+   if (!devel && port !== 0) {
      location += ":" + port
    }
    const {videos} = this.props
