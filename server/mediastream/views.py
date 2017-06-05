@@ -12,6 +12,7 @@ from .forms import UploadFileForm
 import hashlib
 import datetime
 import os
+import json
 # Create your views here.
 
 @api_view(['POST'])
@@ -226,9 +227,10 @@ class LiveStreamViewSet(viewsets.ModelViewSet):
         return queryset
 
     def create(self, request):
-        put = QueryDict(request.body)
-        title = put.get('title')
-        description = put.get('description')
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        title = body['title']
+        description = body['description']
         user = request.user
         try:
             ls = LiveStream.objects.get(user=user)
@@ -243,6 +245,9 @@ class LiveStreamViewSet(viewsets.ModelViewSet):
             key = hasher.hexdigest()
 
             ls = LiveStream(user=user, title=title, description=description, key=key)
+
+            ls.save()
+
             return Response(data={'key': key},status=status.HTTP_201_CREATED)
 
     @list_route()
