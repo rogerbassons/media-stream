@@ -1,5 +1,39 @@
+rtmp {
+    	server {
 
-    server {
+        	listen 1935;
+	        chunk_size 4000;
+
+		application app {
+			live on;
+			deny play all;
+
+			push rtmp://127.0.0.1:1935/hls;
+
+		        on_publish http://127.0.0.1/api/on_publish/;
+			on_publish_done http://127.0.0.1/api/on_publish_done/;
+		}
+
+
+        	application hls {
+			live on;
+		  	deny play all;
+
+            		allow publish 127.0.0.1;
+			deny publish all;
+
+			hls on;
+        	    	hls_path /usr/share/nginx/html/live;
+
+			hls_nested on;
+            		hls_fragment_naming system;
+	        }
+	}
+}
+
+
+
+server {
 
         listen      8080;
 
