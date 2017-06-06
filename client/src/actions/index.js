@@ -6,18 +6,12 @@ export const RECEIVE_TOKENUSER = 'RECEIVE_TOKENUSER'
 export const DELETE_TOKEN = 'DELETE_TOKEN'
 export const RECEIVE_LIVESTREAMKEY = 'RECEIVE_LIVESTREAMKEY'
 
-const devel = false
 var url = window.location.hostname
 var port = window.location.port
 if (port !== 0) {
   url += ":" + port
 }
 var base = "http://" + url + "/api/"
-
-if (devel) {
-  base = "http://localhost:8000/" //DEVEL
-}
-
 
 export const receiveVideos = json => ({
   type: RECEIVE_VIDEOS,
@@ -70,7 +64,7 @@ export const fetchStreams = () => {
 
 export const searchVideos = (text) => {
   return function(dispatch) {
-    axios.get(base + 'videos?search=' + text)
+    axios.get(base + 'videos/?search=' + text)
     .then(function(response) {
       dispatch(receiveVideos(response))
     })

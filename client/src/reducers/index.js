@@ -51,7 +51,7 @@ function token(state = null, action) {
     case DELETE_TOKEN:
     return {
       token: null,
-      username: null,
+      username: null 
     }
     default:
     return state

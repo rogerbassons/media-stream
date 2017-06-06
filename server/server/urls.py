@@ -30,10 +30,10 @@ router.register(r'streams', views.LiveStreamViewSet)
 urlpatterns = [
     url('^on_publish/', views.on_publish),
     url('^on_publish_done/', views.on_publish_done),
-    url('videos/(?P<videoId>[a-fA-F\d]{32})/$', views.VideoByIdView),
-    url('^videos/(?P<videoId>[a-fA-F\d]{32})/comment', views.commentVideoView),
-    url('^videos/(?P<videoId>[a-fA-F\d]{32})/like', views.likeVideoView),
-    url('^videos/(?P<videoId>[a-fA-F\d]{32})/unlike', views.unLikeVideoView),
+    url('^videos/(?P<videoId>[a-fA-F\d]{32})/$', views.VideoByIdView),
+    url('^videos/(?P<videoId>[a-fA-F\d]{32})/comments/$', views.commentVideoView),
+    url('^videos/(?P<videoId>[a-fA-F\d]{32})/like/$', views.likeVideoView),
+    url('^videos/(?P<videoId>[a-fA-F\d]{32})/unlike/$', views.unLikeVideoView),
     url(r'^', include(router.urls)),
     url(r'^login', authtokenviews.obtain_auth_token)
 ]

@@ -20,33 +20,32 @@ class Comments extends Component {
         </FormGroup>
       )
     }
-    let comment
-    let commentForm = (
-      <div>
-      <form onSubmit={e => {
-        e.preventDefault()
-        if (!comment.value.trim()) {
-          return
-        }
-        dispatch(commentVideo(comment.value, videoId, token.token))
-        this.history.push(this.history.location.pathname)
-      }}>
-      <FieldGroup
-      id="formControlsComment"
-      type="text"
-      label="Comment:"
-      componentClass="textarea"
-      inputRef={ref => { comment = ref }}
-      />
-      <Button type="submit">
-      Send
-      </Button>
-      </form>
-      </div>
-    )
-    if (token === null) {
-      commentForm = null
-    }
+    let comment, commentForm
+    if (token !== null && token.token !== null) {
+       commentForm = (
+        <div>
+        <form onSubmit={e => {
+          e.preventDefault()
+          if (!comment.value.trim()) {
+            return
+          }
+          dispatch(commentVideo(comment.value, videoId, token.token))
+          this.history.push(this.history.location.pathname)
+        }}>
+        <FieldGroup
+        id="formControlsComment"
+        type="text"
+        label="Comment:"
+        componentClass="textarea"
+        inputRef={ref => { comment = ref }}
+        />
+        <Button type="submit">
+        Send
+        </Button>
+        </form>
+        </div>
+      )
+   }  
 
     let listComments, commentPanel
     if (comments && comments.length > 0) {

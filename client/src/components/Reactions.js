@@ -37,7 +37,7 @@ class Reactions extends Component {
         <span className="glyphicon glyphicon-thumbs-down">{unlikes}</span>
       </div>
     )
-    if (token !== null) {
+    if (token !== null && token.token !== null) {
       let likeClass = "btn rightmargin glyphicon glyphicon-thumbs-up"
       let unlikeClass = "btn glyphicon glyphicon-thumbs-down"
       if (currentuserlike === 'LIKE') {
