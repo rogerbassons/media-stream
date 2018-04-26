@@ -4,10 +4,10 @@ FROM tiangolo/nginx-rtmp
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && apt update && apt-get install -y nodejs
 
 #PIP and uwsgi
-RUN apt-get install -y python3-pip uwsgi
+RUN apt-get install -y python3-pip python3-dev
 
 # Django
-RUN pip3 install django djangorestframework django-cors-headers mysqlclient
+RUN pip3 install django djangorestframework django-cors-headers mysqlclient uwsgi
 
 # MariaDB
 COPY config/createDB.sql .
@@ -26,4 +26,6 @@ RUN cd client && npm install && npm run build && cp -r build/* /usr/share/nginx/
 
 EXPOSE 80
 
-CMD nginx && service mysql start && uwsgi --ini /usr/share/nginx/html/api/django.ini
+COPY config/entrypoint.sh /entrypoint.sh
+RUN chmod 755 /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
