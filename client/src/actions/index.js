@@ -48,7 +48,9 @@ export const fetchVideos = () => {
   return function(dispatch) {
     axios.get(base + 'videos/last/')
     .then(function(response) {
-      dispatch(receiveVideos(response))
+        if(typeof response.data.results !== "undefined") {
+	    dispatch(receiveVideos(response))
+        }
     })
   }
 }
@@ -57,7 +59,9 @@ export const fetchStreams = () => {
   return function(dispatch) {
     axios.get(base + 'streams/last/')
     .then(function(response) {
-      dispatch(receiveStreams(response))
+        if(typeof response.data.results !== "undefined") {
+            dispatch(receiveStreams(response))
+        }
     })
   }
 }

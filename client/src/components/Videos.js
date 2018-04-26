@@ -6,8 +6,7 @@ class Videos extends Component {
 
  render() {
    var location = window.location.hostname
-   var port = window.location.port
-   
+
    const {videos} = this.props
    const listVideos = videos.videos.map((video,i) =>
    <div key={video.videoId} className="col-md-4">

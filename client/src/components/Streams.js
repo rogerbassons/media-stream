@@ -6,9 +6,6 @@ import 'bootstrap/dist/css/bootstrap.css'
 class Streams extends Component {
 
  render() {
-   var location = window.location.hostname
-   var port = window.location.port
-
    const {streams} = this.props
    const listStreams = streams.streams.map((stream,i) =>
    <div key={stream.user} className="col-md-4">

@@ -5,7 +5,6 @@ class Video extends Component {
 
   createDashPlayer(id) {
     var location = window.location.hostname
-    var port = window.location.port
     var url = "http://" + location + "/videos/" + id + "/" + id + ".mpd"
 
     this.video = this.refs["dashplayer"]

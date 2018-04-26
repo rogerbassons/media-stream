@@ -20,9 +20,11 @@ class Front extends Component {
      <div>
      <div className="row">
        {videos.length !== 0 && <Videos videos={videos} />}
+       {videos.length === 0 && <h2>No videos</h2>}
     </div>
     <div className="row">
       {streams.length !== 0 && <Streams streams={streams} />}
+      {streams.length === 0 && <h2>No live streams found</h2>}
     </div>
     </div>
     )
