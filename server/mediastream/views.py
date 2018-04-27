@@ -176,7 +176,7 @@ class VideoViewSet(viewsets.ModelViewSet):
             os.system('ffmpeg -i ' + path + ' -ss 00:00:00 -vframes 1 -filter:v scale=\'min(1280\, iw):-1\' ../thumbs/' + id + '.png')
             os.system('ffmpeg -i ' + path + ' -c:v libx264 -b:v 4000k -r 24 -x264opts keyint=48:min-keyint=48:no-scenecut -profile:v main -preset medium -movflags +faststart -c:a aac -b:a 128k -ac 2 ' + dashPath)
             os.system('mkdir ../videos/' + id)
-            os.system('MP4Box -dash-strict 4000 -rap -bs-switching no -profile dashavc264:live -out ../videos/' + id + '/' + id + '.mpd ' + dashPath + '#audio ' + dashPath + '#video')
+            os.system('MP4Box -dash 4000 -rap -bs-switching no -profile dashavc264:live -out ../videos/' + id + '/' + id + '.mpd ' + dashPath + '#audio ' + dashPath + '#video')
 
             os.remove(dashPath)
             os.remove(path)

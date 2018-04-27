@@ -19,9 +19,10 @@ COPY config/nginx.conf /etc/nginx/nginx.conf
 
 COPY --chown=www-data:www-data server/ /usr/share/nginx/html/api/
 COPY --chown=www-data:www-data config/addUser.py /usr/share/nginx/html/api/
-RUN mkdir /usr/share/nginx/html/videos && mkdir /usr/share/nginx/html/streams
+RUN mkdir /usr/share/nginx/html/videos && mkdir /usr/share/nginx/html/streams && mkdir /usr/share/nginx/html/thumbs
 RUN service mysql start && cd /usr/share/nginx/html/api && python3 manage.py migrate && python3 manage.py shell < addUser.py
 RUN mkdir /usr/share/nginx/html/api/tmp
+
 
 COPY client client
 RUN cd client && npm install && npm run build && cp -r build/* /usr/share/nginx/html/ && chown -R www-data:www-data /usr/share/nginx/html
