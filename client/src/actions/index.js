@@ -15,12 +15,12 @@ var base = "http://" + url + "/api/"
 
 export const receiveVideos = json => ({
   type: RECEIVE_VIDEOS,
-  videos: json.data.results
+  videos: json.data
 })
 
 export const receiveStreams = json => ({
   type: RECEIVE_STREAMS,
-  streams: json.data.results
+  streams: json.data
 })
 
 export const receiveVideo = json => ({
