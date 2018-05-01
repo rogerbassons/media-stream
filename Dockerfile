@@ -28,7 +28,7 @@ COPY client client
 RUN cd client && npm install && npm run build && cp -r build/* /usr/share/nginx/html/ && chown -R www-data:www-data /usr/share/nginx/html
 
 
-EXPOSE 80 1935
+EXPOSE 80 1935 8083
 
 
 COPY config/entrypoint.sh /entrypoint.sh
