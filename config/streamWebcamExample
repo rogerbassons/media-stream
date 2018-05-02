@@ -1,0 +1,1 @@
+ffmpeg -re -f video4linux2 -i /dev/video0 -vcodec libx264 -vprofile baseline -acodec aac -strict -2 -f flv -pix_fmt yuv420p "rtmp://localhost/live/223b2f42585ed2d3af7a0b9f19efc8ac"
