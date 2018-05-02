@@ -59,7 +59,7 @@ class Live extends Component {
       if (livekey) {
         content = (
          <div>
-         Live stream is ready, you can start streaming at rtmp://{window.location.hostname}/live/{token.username}/{livekey.livekey}
+         Live stream is ready, you can start streaming at rtmp://{window.location.hostname}/live/{livekey.livekey}
          </div>
          )
       } else {
