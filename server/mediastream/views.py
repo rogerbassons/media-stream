@@ -25,7 +25,7 @@ def on_publish(request):
         ls.enabled = True
         ls.live_at = datetime.datetime.now()
         ls.save()
-        return Response(ls.user.username,status=status.HTTP_302_FOUND)
+        return HttpResponseRedirect(ls.user.username + "/")
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
