@@ -55,7 +55,7 @@ RUN cd client && \
     chown -R www-data:www-data /usr/share/nginx/html
 
 
-EXPOSE 80 1935 8083
+EXPOSE 80 1935
 
 
 COPY config/entrypoint.sh /entrypoint.sh
